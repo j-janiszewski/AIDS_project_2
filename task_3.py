@@ -26,7 +26,7 @@ class BookDataSet(MRJob):
 
     def reduce_sort_counts(self, _, word_counts):
         for count, key in sorted(word_counts, reverse=True):
-            yield (int(count), key)
+            yield (key,int(count))
 
 
 if __name__=="__main__":
