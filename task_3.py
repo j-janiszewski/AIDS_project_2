@@ -22,7 +22,7 @@ class BookDataSet(MRJob):
         yield word, sum(counts)
 
     def reducer_sum_word_counts(self, key, values):
-        yield None, ( key, sum(values))
+        yield None, (sum(values), key)
 
     def reduce_sort_counts(self, _, word_counts):
         for count, key in sorted(word_counts, reverse=True):

@@ -15,18 +15,18 @@ class CustomerDataSet(MRJob):
         ]
 
     def mapper_extract_words(self, _, line):
-        for word in line.split(" "):
-            yield word.lower(), 1
+        id,_ ,amount= line.split(",")
+        yield id, float(amount)
 
-    def combine_word_counts(self, word, counts):
-        yield word, sum(counts)
+    def combine_word_counts(self, id, amount):
+        yield id, sum(amount)
 
     def reducer_sum_word_counts(self, key, values):
-        yield None, ( key, sum(values))
+        yield None, ( sum(values), key)
 
-    def reduce_sort_counts(self, _, word_counts):
-        for count, key in sorted(word_counts, reverse=True):
-            yield (int(count), key)
+    def reduce_sort_counts(self, _, total_spendings):
+        for amount, key in sorted(total_spendings, reverse=True):
+            yield (key, amount)
 
 
 if __name__=="__main__":
