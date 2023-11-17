@@ -6,7 +6,7 @@ class BookDataSet(MRJob):
     def steps(self):
         return [
             MRStep(
-                mapper=self.mapper_extract_words, combiner=self.combine_word_counts,
+                mapper=self.mapper_extract_words, 
                 reducer=self.reducer_sum_word_counts
             ),
             MRStep(
@@ -17,9 +17,6 @@ class BookDataSet(MRJob):
     def mapper_extract_words(self, _, line):
         for word in line.split(" "):
             yield word.lower(), 1
-
-    def combine_word_counts(self, word, counts):
-        yield word, sum(counts)
 
     def reducer_sum_word_counts(self, key, values):
         yield None, (sum(values), key)

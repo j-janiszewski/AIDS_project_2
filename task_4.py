@@ -6,11 +6,11 @@ class CustomerDataSet(MRJob):
     def steps(self):
         return [
             MRStep(
-                mapper=self.mapper_extract_words, combiner=self.combine_word_counts,
-                reducer=self.reducer_sum_word_counts
+                mapper=self.mapper_extract_words ,
+                reducer=self.reducer_sum_spendings_counts
             ),
             MRStep(
-                reducer=self.reduce_sort_counts
+                reducer=self.reduce_sort_amounts
             )
         ]
 
@@ -18,13 +18,11 @@ class CustomerDataSet(MRJob):
         id,_ ,amount= line.split(",")
         yield id, float(amount)
 
-    def combine_word_counts(self, id, amount):
-        yield id, sum(amount)
 
-    def reducer_sum_word_counts(self, key, values):
+    def reducer_sum_spendings_counts(self, key, values):
         yield None, ( sum(values), key)
 
-    def reduce_sort_counts(self, _, total_spendings):
+    def reduce_sort_amounts(self, _, total_spendings):
         for amount, key in sorted(total_spendings, reverse=True):
             yield (key, amount)
 
